@@ -78,8 +78,14 @@ def vault(pm, gov, rewards, guardian, management, token):
 
 
 @pytest.fixture
-def strategy(strategist, keeper, vault, Strategy, gov):
-    strategy = strategist.deploy(Strategy, vault)
+def registry(pm, web3):
+    Registry = pm(config["dependencies"][0]).Registry
+    return Registry.at(web3.ens.address("v2.registry.ychad.eth"))
+
+
+@pytest.fixture
+def strategy(strategist, keeper, token, registry, vault, Strategy, gov):
+    strategy = strategist.deploy(Strategy, vault, token, registry)
     strategy.setKeeper(keeper)
     vault.addStrategy(strategy, 10_000, 0, 2 ** 256 - 1, 1_000, {"from": gov})
     yield strategy
