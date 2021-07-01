@@ -43,6 +43,11 @@ contract Strategy is BaseStrategy, BaseWrapper {
             );
     }
 
+    function delegatedAssets() external view override returns (uint256) {
+        // All assets are delegated
+        return estimatedTotalAssets();
+    }
+
     function prepareReturn(uint256 _debtOutstanding)
         internal
         override
